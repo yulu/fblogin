@@ -29,9 +29,11 @@ public class MainActivity extends Activity implements UserProfile.ProfileUpdateL
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_main);
 		
-		mFBlogin = FBlogin.getInstance(this);
+		//mFBlogin = FBlogin.getInstance(this);
+		mFBlogin = new FBlogin(this);
 		mFBlogin.onCreate(savedInstanceState);
 		mUser = new UserProfile();
+		mUser.registerUpdateListener(this);
 		
 		//view
 		mFBButton = (Button)findViewById(R.id.fb_button);
@@ -98,7 +100,8 @@ public class MainActivity extends Activity implements UserProfile.ProfileUpdateL
 			public void run() {
 				mUserNameView.setText(mUser.getUserName());
 				mEmailView.setText(mUser.getEmail());
-				mGenderView.setText(mUser.getGender());				
+				mGenderView.setText(mUser.getGender());		
+				mFBButton.setClickable(false);
 			}
 			
 		});		

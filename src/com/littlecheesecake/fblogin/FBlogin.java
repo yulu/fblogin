@@ -20,7 +20,10 @@ public class FBlogin {
 	private Context mContext;
 	private UserProfile mUserProfile;
 
-	private static FBlogin mFBlogin;
+	/**
+	 * TODO: should not use singleton class!!!!! otherwise could not make onActivityResult work!!!
+	 */
+	/*private static FBlogin mFBlogin;
 	
 	public static FBlogin getInstance(Context c){
 		if( mFBlogin == null){
@@ -28,13 +31,14 @@ public class FBlogin {
 		}
 		
 		return mFBlogin;
-	}
+	}*/
 
-	private FBlogin(Context c) {
+	public FBlogin(Context c) {
 		mContext = c;
 	}
 	
 	public void onCreate(Bundle b){
+  
 		Session fbsession = Session.getActiveSession();
 		if(fbsession == null){
 			if(b != null){
@@ -52,11 +56,12 @@ public class FBlogin {
 	}
 	
 	public void onStop(){
-		Session session = Session.getActiveSession();
+		Session fbsession = Session.getActiveSession();
 		
-		session.removeCallback(statusCallback);
-		if( !session.isClosed()){
-			session.closeAndClearTokenInformation();
+		fbsession.removeCallback(statusCallback);
+		if( !fbsession.isClosed()){
+			fbsession.closeAndClearTokenInformation();
+			Session.setActiveSession(null);
 		}
 	}
 	
@@ -72,7 +77,7 @@ public class FBlogin {
 		if(!isValidFacebookVersion()){
 			request.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
 		}
-		request.setPermissions(Arrays.asList("email", "user_birthday"));
+		request.setPermissions(Arrays.asList("email"));
 		request.setCallback(statusCallback);
 		
 		Session fbsession = Session.getActiveSession();
@@ -117,8 +122,7 @@ public class FBlogin {
 				Exception exception) {
 			final Session fbsession = Session.getActiveSession();
 			
-			if(fbsession.isOpened() && fbsession.getPermissions().contains("email")
-					&& fbsession.getPermissions().contains("user_birthday")){
+			if(fbsession.isOpened() && fbsession.getPermissions().contains("email")){
 				
 				//final FBProfile fbProfile = new FBProfile();
 				Request.executeMeRequestAsync(fbsession, new Request.GraphUserCallback() {
@@ -128,7 +132,7 @@ public class FBlogin {
 						try{
 							//update profile using the user data 
 							if(mUserProfile != null){
-								mUserProfile.setProfile(user.getLastName(), (String)user.getProperty("email"), null, (String)user.getProperty("gender"));
+								mUserProfile.setProfile(user.getName(), (String)user.getProperty("email"), null, (String)user.getProperty("gender"));
 							}
 						}catch(Exception e){
 							e.printStackTrace();
@@ -136,8 +140,7 @@ public class FBlogin {
 						
 					}
 				});
-			}
-			
+			}		
 		}	
 	}
 }
