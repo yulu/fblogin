@@ -1,5 +1,7 @@
 package com.littlecheesecake.fblogin;
 
+import com.littlecheesecake.fblogin.util.ImageDownloader;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,9 +18,15 @@ public class MainActivity extends Activity implements UserProfile.ProfileUpdateL
 	private UserProfile mUser;
 	
 	/**
+	 * image download
+	 */
+	private ImageDownloader mImageDownloader = ImageDownloader.getInstance();
+	
+	/**
 	 * views
 	 */
-	private Button mFBButton;
+	private Button mFBInButton;
+	private Button mFBOutButton;
 	private TextView mUserNameView;
 	private TextView mEmailView;
 	private TextView mGenderView;
@@ -32,16 +40,18 @@ public class MainActivity extends Activity implements UserProfile.ProfileUpdateL
 		//mFBlogin = FBlogin.getInstance(this);
 		mFBlogin = new FBlogin(this);
 		mFBlogin.onCreate(savedInstanceState);
-		mUser = new UserProfile();
+		mUser =  UserProfile.getInstance(this);
 		mUser.registerUpdateListener(this);
 		
 		//view
-		mFBButton = (Button)findViewById(R.id.fb_button);
+		mFBInButton = (Button)findViewById(R.id.fb_login_button);
+		mFBOutButton = (Button)findViewById(R.id.fb_logout_button);
 		mUserNameView = (TextView) findViewById(R.id.user_name);
 		mEmailView = (TextView) findViewById(R.id.user_email);
 		mGenderView = (TextView) findViewById(R.id.user_gender);
+		mPicView = (ImageView)findViewById(R.id.user_pic);
 		
-		mFBButton.setOnClickListener(new OnClickListener(){
+		mFBInButton.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -49,20 +59,26 @@ public class MainActivity extends Activity implements UserProfile.ProfileUpdateL
 			}
 			
 		});
+		
+		mFBOutButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				mFBlogin.onLogout(mUser);	
+				mFBInButton.setClickable(true);
+			}
+		});
+		
+		//set view
+		mUser.setProfile();
 
 	}
 	
 	@Override
 	public void onStart(){
 		super.onStart();
-		mFBlogin.onStart();
+		mFBlogin.onStart();                                                                                                                                                            
 	}
-	
-	@Override
-	public void onStop(){
-		super.onStop();
-		mFBlogin.onStop();
-	}
+
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -98,10 +114,13 @@ public class MainActivity extends Activity implements UserProfile.ProfileUpdateL
 
 			@Override
 			public void run() {
+				
 				mUserNameView.setText(mUser.getUserName());
 				mEmailView.setText(mUser.getEmail());
-				mGenderView.setText(mUser.getGender());		
-				mFBButton.setClickable(false);
+				mGenderView.setText(mUser.getGender());	
+				mImageDownloader.displayImage(mPicView, mUser.getPicUrl());
+				mFBInButton.setClickable(false);
+				mFBOutButton.setClickable(true);
 			}
 			
 		});		

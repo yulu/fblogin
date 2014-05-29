@@ -55,13 +55,16 @@ public class FBlogin {
 		Session.getActiveSession().addCallback(statusCallback);
 	}
 	
-	public void onStop(){
+	public void onLogout(UserProfile user){
 		Session fbsession = Session.getActiveSession();
 		
 		fbsession.removeCallback(statusCallback);
 		if( !fbsession.isClosed()){
 			fbsession.closeAndClearTokenInformation();
-			Session.setActiveSession(null);
+		}
+		
+		if(user != null){
+			user.closeSession();
 		}
 	}
 	
@@ -132,7 +135,8 @@ public class FBlogin {
 						try{
 							//update profile using the user data 
 							if(mUserProfile != null){
-								mUserProfile.setProfile(user.getName(), (String)user.getProperty("email"), null, (String)user.getProperty("gender"));
+								String picUrl = "https://graph.facebook.com/"+user.getId()+"/picture?type=large";
+								mUserProfile.setProfile(user.getName(), (String)user.getProperty("email"), picUrl, (String)user.getProperty("gender"));
 							}
 						}catch(Exception e){
 							e.printStackTrace();

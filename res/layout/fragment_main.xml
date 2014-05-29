@@ -10,11 +10,20 @@
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
     <Button
-        android:id="@+id/fb_button"
+        android:id="@+id/fb_login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="facebook login" />
-    
+    <Button
+        android:id="@+id/fb_logout_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="facebook logout" />
+    <ImageView
+        android:id="@+id/user_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/geek"/>
     <TextView
         android:id="@+id/user_name"
         android:layout_width="wrap_content"
@@ -27,9 +36,6 @@
         android:id="@+id/user_gender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-    <ImageView
-        android:id="@+id/user_pic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+
 
 </LinearLayout>
