@@ -1,7 +1,5 @@
 package com.littlecheesecake.fblogin;
 
-import com.littlecheesecake.fblogin.util.ImageDownloader;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +10,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.littlecheesecake.fblogin.util.ImageDownloader;
 
 public class MainActivity extends Activity implements UserProfile.ProfileUpdateListener{
 	private FBlogin mFBlogin;
